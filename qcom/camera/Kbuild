@@ -1,7 +1,5 @@
-# Use current $(MSM_ARCH) to set config/ makefile path
-CAMERA_TARGET_MKFILE_PATH := $(CAMERA_DEVICETREE_ROOT)/config/$(MSM_ARCH).mk
-# Check to see if current target makefile exists
-CAMERA_TARGET_EXISTS := $(or $(and $(wildcard $(CAMERA_TARGET_MKFILE_PATH)),y),n)
+DTC_INCLUDE += $(srctree)/../sm6225-modules/qcom/opensource/camera-kernel
+KBUILD_DTC_INCLUDE += $(srctree)/../sm6225-modules/qcom/opensource/camera-kernel
 
 include $(srctree)/$(src)/config/bengal.mk
 # Since Kernel SI can support multiple ARCH's this allows only the current selected target ARCH
