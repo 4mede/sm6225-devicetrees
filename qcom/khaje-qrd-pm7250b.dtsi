@@ -52,7 +52,7 @@
 };
 
 &smb1394_div2_cp_primary {
-	io-channels = <&pm7250b_vadc ADC_AMUX_THM2>;
+	io-channels = <&pm7250b_vadc ADC5_AMUX_THM2>;
 	io-channel-names = "die_temp";
 	qcom,parallel-input-mode = <1>;
 	qcom,parallel-output-mode = <2>;
@@ -67,14 +67,14 @@
 
 &pm7250b_charger {
 	status = "ok";
-	io-channels = <&pm7250b_vadc ADC_USB_IN_V_16>,
-		      <&pm7250b_vadc ADC_USB_IN_I>,
-		      <&pm7250b_vadc ADC_CHG_TEMP>,
-		      <&pm7250b_vadc ADC_DIE_TEMP>,
-		      <&pm7250b_vadc ADC_AMUX_THM3_PU2>,
-		      <&pm7250b_vadc ADC_SBUx>,
-		      <&pm7250b_vadc ADC_VPH_PWR>,
-		      <&pm7250b_vadc ADC_AMUX_THM1_PU2>;
+	io-channels = <&pm7250b_vadc ADC5_USB_IN_V_16>,
+		      <&pm7250b_vadc ADC5_USB_IN_I>,
+		      <&pm7250b_vadc ADC5_CHG_TEMP>,
+		      <&pm7250b_vadc ADC5_DIE_TEMP>,
+		      <&pm7250b_vadc ADC5_AMUX_THM3_100K_PU>,
+		      <&pm7250b_vadc ADC5_SBUx>,
+		      <&pm7250b_vadc ADC5_VPH_PWR>,
+		      <&pm7250b_vadc ADC5_AMUX_THM1_100K_PU>;
 	io-channel-names = "usb_in_voltage",
 			   "usb_in_current",
 			   "chg_temp",
@@ -102,8 +102,8 @@
 
 &pm7250b_qg {
 	status = "ok";
-	io-channels = <&pm7250b_vadc ADC_BAT_THERM_PU2>,
-		      <&pm7250b_vadc ADC_BAT_ID_PU2>;
+	io-channels = <&pm7250b_vadc ADC5_BAT_THERM_100K_PU>,
+		      <&pm7250b_vadc ADC5_BAT_ID_100K_PU>;
 	io-channel-names = "batt-therm",
 			   "batt-id";
 	qcom,qg-iterm-ma = <150>;

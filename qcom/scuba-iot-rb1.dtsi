@@ -89,8 +89,8 @@
 	qcom,auto-recharge-soc = <98>;
 	qcom,suspend-input-on-debug-batt;
 	qcom,battery-data = <&scuba_batterydata>;
-	io-channels = <&pm2250_vadc ADC_USB_IN_V_16>,
-			<&pm2250_vadc ADC_CHG_TEMP>;
+	io-channels = <&pm2250_vadc ADC5_USB_IN_V_16>,
+			<&pm2250_vadc ADC5_CHG_TEMP>;
 	io-channel-names = "usb_in_voltage",
 			"chg_temp";
 	qcom,thermal-mitigation = <2000000 1500000 1000000 500000>;
@@ -109,7 +109,7 @@
 		polling-delay-passive = <2000>;
 		polling-delay = <5000>;
 		thermal-governor = "step_wise";
-		thermal-sensors = <&pm2250_adc_tm_iio ADC_AMUX_THM2_PU2>;
+		thermal-sensors = <&pm2250_adc_tm_iio ADC5_AMUX_THM2_100K_PU>;
 		wake-capable-sensor;
 		trips {
 			quiet_cpu0_trip: quiet-cpu0-trip {

@@ -327,7 +327,7 @@
 		polling-delay-passive = <2000>;
 		polling-delay = <0>;
 		thermal-governor = "step_wise";
-		thermal-sensors = <&pm6125_adc_tm ADC_AMUX_THM2_PU2>;
+		thermal-sensors = <&pm6125_adc_tm ADC5_AMUX_THM2_100K_PU>;
 		wake-capable-sensor;
 
 		trips {
@@ -441,7 +441,7 @@
 		polling-delay-passive = <0>;
 		polling-delay = <0>;
 		thermal-governor = "step_wise";
-		thermal-sensors = <&pm6125_adc_tm ADC_AMUX_THM1_PU2>;
+		thermal-sensors = <&pm6125_adc_tm ADC5_AMUX_THM1_100K_PU>;
 		wake-capable-sensor;
 
 		trips {

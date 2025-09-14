@@ -111,7 +111,7 @@
 	pinctrl-0 = <&camera_therm_default &emmc_therm_default &rf_pa1_therm_default>;
 
 	rf_pa1_therm {
-		reg = <ADC_GPIO4_PU2>;
+		reg = <ADC5_GPIO4_100K_PU>;
 		label = "rf_pa1_therm";
 		qcom,ratiometric;
 		qcom,hw-settle-time = <200>;
@@ -120,13 +120,13 @@
 };
 
 &pm6125_adc_tm {
-	io-channels = <&pm6125_vadc ADC_AMUX_THM1_PU2>,
-			<&pm6125_vadc ADC_AMUX_THM2_PU2>,
-			<&pm6125_vadc ADC_XO_THERM_PU2>,
-			<&pm6125_vadc ADC_GPIO4_PU2>;
+	io-channels = <&pm6125_vadc ADC5_AMUX_THM1_100K_PU>,
+			<&pm6125_vadc ADC5_AMUX_THM2_100K_PU>,
+			<&pm6125_vadc ADC5_XO_THERM_100K_PU>,
+			<&pm6125_vadc ADC5_GPIO4_100K_PU>;
 
 	rf_pa1_therm {
-		reg = <ADC_GPIO4_PU2>;
+		reg = <ADC5_GPIO4_100K_PU>;
 		qcom,ratiometric;
 		qcom,hw-settle-time = <200>;
 	};
@@ -137,7 +137,7 @@
 		polling-delay-passive = <0>;
 		polling-delay = <0>;
 		thermal-governor = "user_space";
-		thermal-sensors = <&pm6125_adc_tm ADC_GPIO4_PU2>;
+		thermal-sensors = <&pm6125_adc_tm ADC5_GPIO4_100K_PU>;
 		wake-capable-sensor;
 		trips {
 			active-config0 {
@@ -191,13 +191,13 @@
 
 &pm7250b_charger {
 	status = "ok";
-	io-channels = <&pm7250b_vadc ADC_USB_IN_V_16>,
-		      <&pm7250b_vadc ADC_USB_IN_I>,
-		      <&pm7250b_vadc ADC_CHG_TEMP>,
-		      <&pm7250b_vadc ADC_DIE_TEMP>,
-		      <&pm7250b_vadc ADC_AMUX_THM3_PU2>,
-		      <&pm7250b_vadc ADC_SBUx>,
-		      <&pm7250b_vadc ADC_VPH_PWR>;
+	io-channels = <&pm7250b_vadc ADC5_USB_IN_V_16>,
+		      <&pm7250b_vadc ADC5_USB_IN_I>,
+		      <&pm7250b_vadc ADC5_CHG_TEMP>,
+		      <&pm7250b_vadc ADC5_DIE_TEMP>,
+		      <&pm7250b_vadc ADC5_AMUX_THM3_100K_PU>,
+		      <&pm7250b_vadc ADC5_SBUx>,
+		      <&pm7250b_vadc ADC5_VPH_PWR>;
 	io-channel-names = "usb_in_voltage",
 			   "usb_in_current",
 			   "chg_temp",
@@ -216,8 +216,8 @@
 
 &pm7250b_qg {
 	status = "ok";
-	io-channels = <&pm7250b_vadc ADC_BAT_THERM_PU2>,
-		      <&pm7250b_vadc ADC_BAT_ID_PU2>;
+	io-channels = <&pm7250b_vadc ADC5_BAT_THERM_100K_PU>,
+		      <&pm7250b_vadc ADC5_BAT_ID_100K_PU>;
 	io-channel-names = "batt-therm",
 			   "batt-id";
 	qcom,qg-iterm-ma = <150>;

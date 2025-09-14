@@ -1004,10 +1004,10 @@
 			"core_clk_src", "core_clk",
 			"iface_clk", "bus_clk";
 		clocks =
-			<&rpmcc QSEECOM_CE1_CLK>,
-			<&rpmcc QSEECOM_CE1_CLK>,
-			<&rpmcc QSEECOM_CE1_CLK>,
-			<&rpmcc QSEECOM_CE1_CLK>;
+			<&rpmcc RPM_SMD_CE1_CLK>,
+			<&rpmcc RPM_SMD_CE1_CLK>,
+			<&rpmcc RPM_SMD_CE1_CLK>,
+			<&rpmcc RPM_SMD_CE1_CLK>;
 		qcom,ce-opp-freq = <192000000>;
 		qcom,qsee-reentrancy-support = <2>;
 	};
@@ -1066,10 +1066,10 @@
 			"core_clk_src", "core_clk",
 			"iface_clk", "bus_clk";
 		clocks =
-			<&rpmcc QCEDEV_CE1_CLK>,
-			<&rpmcc QCEDEV_CE1_CLK>,
-			<&rpmcc QCEDEV_CE1_CLK>,
-			<&rpmcc QCEDEV_CE1_CLK>;
+			<&rpmcc RPM_SMD_CE1_CLK>,
+			<&rpmcc RPM_SMD_CE1_CLK>,
+			<&rpmcc RPM_SMD_CE1_CLK>,
+			<&rpmcc RPM_SMD_CE1_CLK>;
 		qcom,ce-opp-freq = <192000000>;
 		qcom,smmu-s1-enable;
 		iommus = <&apps_smmu 0x0086 0x0011>,
@@ -1121,10 +1121,10 @@
 			"core_clk_src", "core_clk",
 			"iface_clk", "bus_clk";
 		clocks =
-			<&rpmcc QCRYPTO_CE1_CLK>,
-			<&rpmcc QCRYPTO_CE1_CLK>,
-			<&rpmcc QCRYPTO_CE1_CLK>,
-			<&rpmcc QCRYPTO_CE1_CLK>;
+			<&rpmcc RPM_SMD_CE1_CLK>,
+			<&rpmcc RPM_SMD_CE1_CLK>,
+			<&rpmcc RPM_SMD_CE1_CLK>,
+			<&rpmcc RPM_SMD_CE1_CLK>;
 		qcom,use-sw-aes-cbc-ecb-ctr-algo;
 		qcom,use-sw-aes-xts-algo;
 		qcom,use-sw-aes-ccm-algo;
@@ -1251,7 +1251,7 @@
 		compatible = "qcom,pil-tz-generic";
 		reg = <0xab00000 0x00100>;
 
-		clocks = <&rpmcc CXO_SMD_PIL_LPASS_CLK>;
+		clocks = <&rpmcc RPM_SMD_SNOC_LPASS_CLK>;
 		clock-names = "xo";
 		qcom,proxy-clock-names = "xo";
 		qcom,mas-crypto = <&mas_crypto_c0>;
@@ -1334,7 +1334,7 @@
 		compatible = "qcom,pil-tz-generic";
 		reg = <0x6080000 0x100>;
 
-		clocks = <&rpmcc CXO_SMD_PIL_MSS_CLK>;
+		clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>;
 		clock-names = "xo";
 		qcom,proxy-clock-names = "xo";
 		qcom,mas-crypto = <&mas_crypto_c0>;
@@ -2454,7 +2454,7 @@
 	pinctrl-0 = <&conn_therm_default &skin_therm_default>;
 
 	xo_therm {
-		reg = <ADC_XO_THERM_PU2>;
+		reg = <ADC5_XO_THERM_100K_PU>;
 		label = "xo_therm";
 		qcom,ratiometric;
 		qcom,hw-settle-time = <200>;
@@ -2462,7 +2462,7 @@
 	};
 
 	pa_therm {
-		reg = <ADC_AMUX_THM1_PU2>;
+		reg = <ADC5_AMUX_THM1_100K_PU>;
 		label = "pa_therm";
 		qcom,ratiometric;
 		qcom,hw-settle-time = <200>;
@@ -2470,7 +2470,7 @@
 	};
 
 	quiet_therm {
-		reg = <ADC_AMUX_THM2_PU2>;
+		reg = <ADC5_AMUX_THM2_100K_PU>;
 		label = "quiet_therm";
 		qcom,ratiometric;
 		qcom,hw-settle-time = <200>;
@@ -2478,7 +2478,7 @@
 	};
 
 	msm_therm {
-		reg = <ADC_AMUX_THM3_PU2>;
+		reg = <ADC5_AMUX_THM3_100K_PU>;
 		label = "msm_therm";
 		qcom,ratiometric;
 		qcom,hw-settle-time = <200>;
@@ -2486,7 +2486,7 @@
 	};
 
 	skin_therm {
-		reg = <ADC_GPIO3_PU2>;
+		reg = <ADC5_GPIO3_100K_PU>;
 		label = "skin_therm";
 		qcom,ratiometric;
 		qcom,hw-settle-time = <200>;
@@ -2494,7 +2494,7 @@
 	};
 
 	conn_therm {
-		reg = <ADC_GPIO4_PU2>;
+		reg = <ADC5_GPIO4_100K_PU>;
 		label = "conn_therm";
 		qcom,ratiometric;
 		qcom,hw-settle-time = <200>;
@@ -2526,52 +2526,52 @@
 			#thermal-sensor-cells = <1>;
 			#address-cells = <1>;
 			#size-cells = <0>;
-			io-channels = <&pm2250_vadc ADC_XO_THERM_PU2>,
-					<&pm2250_vadc ADC_AMUX_THM1_PU2>,
-					<&pm2250_vadc ADC_AMUX_THM2_PU2>,
-					<&pm2250_vadc ADC_AMUX_THM3_PU2>,
-					<&pm2250_vadc ADC_GPIO3_PU2>,
-					<&pm2250_vadc ADC_GPIO4_PU2>,
-					<&pm2250_vadc ADC_SBUx>;
+			io-channels = <&pm2250_vadc ADC5_XO_THERM_100K_PU>,
+					<&pm2250_vadc ADC5_AMUX_THM1_100K_PU>,
+					<&pm2250_vadc ADC5_AMUX_THM2_100K_PU>,
+					<&pm2250_vadc ADC5_AMUX_THM3_100K_PU>,
+					<&pm2250_vadc ADC5_GPIO3_100K_PU>,
+					<&pm2250_vadc ADC5_GPIO4_100K_PU>,
+					<&pm2250_vadc ADC5_SBUx>;
 
 			xo_therm {
-				reg = <ADC_XO_THERM_PU2>;
+				reg = <ADC5_XO_THERM_100K_PU>;
 				qcom,ratiometric;
 				qcom,hw-settle-time = <200>;
 			};
 
 			pa_therm {
-				reg = <ADC_AMUX_THM1_PU2>;
+				reg = <ADC5_AMUX_THM1_100K_PU>;
 				qcom,ratiometric;
 				qcom,hw-settle-time = <200>;
 			};
 
 			quiet_therm {
-				reg = <ADC_AMUX_THM2_PU2>;
+				reg = <ADC5_AMUX_THM2_100K_PU>;
 				qcom,ratiometric;
 				qcom,hw-settle-time = <200>;
 			};
 
 			msm_therm {
-				reg = <ADC_AMUX_THM3_PU2>;
+				reg = <ADC5_AMUX_THM3_100K_PU>;
 				qcom,ratiometric;
 				qcom,hw-settle-time = <200>;
 			};
 
 			skin_therm {
-				reg = <ADC_GPIO3_PU2>;
+				reg = <ADC5_GPIO3_100K_PU>;
 				qcom,ratiometric;
 				qcom,hw-settle-time = <200>;
 			};
 
 			conn_therm {
-				reg = <ADC_GPIO4_PU2>;
+				reg = <ADC5_GPIO4_100K_PU>;
 				qcom,ratiometric;
 				qcom,hw-settle-time = <200>;
 			};
 
 			s3_die_temp {
-				reg = <ADC_SBUx>;
+				reg = <ADC5_SBUx>;
 			};
 		};
 	};

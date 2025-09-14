@@ -24,8 +24,8 @@
 			qcom,bus-type = <2>;
 			qcom,util-fact = <153>;
 			clock-names = "bus_clk", "bus_a_clk";
-			clocks = <&rpmcc BIMC_MSMBUS_CLK>,
-				<&rpmcc BIMC_MSMBUS_A_CLK>;
+			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+				<&rpmcc RPM_SMD_BIMC_A_CLK>;
 		};
 
 		fab_config_noc: fab-config_noc {
@@ -36,8 +36,8 @@
 			qcom,bypass-qos-prg;
 			qcom,bus-type = <1>;
 			clock-names = "bus_clk", "bus_a_clk";
-			clocks = <&rpmcc CNOC_MSMBUS_CLK>,
-				<&rpmcc CNOC_MSMBUS_A_CLK>;
+			clocks = <&rpmcc RPM_SMD_CNOC_CLK>,
+				<&rpmcc RPM_SMD_CNOC_A_CLK>;
 		};
 
 		fab_qup_virt: fab-qup_virt {
@@ -61,8 +61,8 @@
 			qcom,base-offset = <0x15000>;
 			qcom,qos-off = <0x1000>;
 			clock-names = "bus_clk", "bus_a_clk";
-			clocks = <&rpmcc SNOC_MSMBUS_CLK>,
-				<&rpmcc SNOC_MSMBUS_A_CLK>;
+			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+				<&rpmcc RPM_SMD_SNOC_A_CLK>;
 		};
 
 		fab_mmnrt_virt: fab-mmnrt_virt {
@@ -75,8 +75,8 @@
 			qcom,qos-off = <0x1000>;
 			qcom,util-fact = <142>;
 			clock-names = "bus_clk", "bus_a_clk";
-			clocks = <&rpmcc CPP_MMNRT_MSMBUS_CLK>,
-				<&rpmcc CPP_MMNRT_MSMBUS_A_CLK>;
+			clocks = <&rpmcc RPM_SMD_MMNRT_CLK>,
+				<&rpmcc RPM_SMD_MMNRT_A_CLK>;
 		};
 
 		fab_mmrt_virt: fab-mmrt_virt {
@@ -89,8 +89,8 @@
 			qcom,qos-off = <0x1000>;
 			qcom,util-fact = <139>;
 			clock-names = "bus_clk", "bus_a_clk";
-			clocks = <&rpmcc MDP_MMRT_MSMBUS_CLK>,
-				<&rpmcc MDP_MMRT_MSMBUS_A_CLK>;
+			clocks = <&rpmcc RPM_SMD_MMRT_CLK>,
+				<&rpmcc RPM_SMD_MMRT_A_CLK>;
 		};
 
 		/*Masters*/
@@ -238,8 +238,8 @@
 			qcom,connections = <&slv_anoc_snoc>;
 			qcom,prio = <2>;
 			clock-names = "node_clk", "node_a_clk";
-			clocks = <&rpmcc CRYPTO_MSMBUS_SNOC_PERIPH_CLK>,
-				<&rpmcc CRYPTO_MSMBUS_SNOC_PERIPH_A_CLK>;
+			clocks = <&rpmcc RPM_SMD_CE1_CLK>,
+				<&rpmcc RPM_SMD_CE1_A_CLK>;
 			qcom,bus-dev = <&fab_sys_noc>;
 			qcom,mas-rpm-id = <ICBID_MASTER_CRYPTO_CORE0>;
 		};
@@ -420,8 +420,8 @@
 			qcom,connections = <&slv_anoc_snoc>;
 			qcom,prio = <2>;
 			clock-names = "node_clk", "node_a_clk";
-			clocks = <&rpmcc QUP0_MSMBUS_SNOC_PERIPH_CLK>,
-				<&rpmcc QUP0_MSMBUS_SNOC_PERIPH_A_CLK>;
+			clocks = <&rpmcc RPM_SMD_QUP_CLK>,
+				<&rpmcc RPM_SMD_QUP_A_CLK>;
 			qcom,bus-dev = <&fab_sys_noc>;
 			qcom,mas-rpm-id = <ICBID_MASTER_QUP_0>;
 		};
@@ -465,8 +465,8 @@
 			qcom,connections = <&slv_anoc_snoc>;
 			qcom,prio = <2>;
 			clock-names = "node_clk", "node_a_clk";
-			clocks = <&rpmcc SDC1_MSMBUS_SNOC_PERIPH_CLK>,
-				<&rpmcc SDC1_MSMBUS_SNOC_PERIPH_A_CLK>;
+			clocks = <&rpmcc RPM_SMD_SNOC_PERIPH_CLK>,
+				<&rpmcc RPM_SMD_SNOC_PERIPH_A_CLK>;
 			qcom,bus-dev = <&fab_sys_noc>;
 			qcom,mas-rpm-id = <ICBID_MASTER_SDCC_1>;
 		};
@@ -482,8 +482,8 @@
 			qcom,connections = <&slv_anoc_snoc>;
 			qcom,prio = <2>;
 			clock-names = "node_clk", "node_a_clk";
-			clocks = <&rpmcc SDC2_MSMBUS_SNOC_PERIPH_CLK>,
-				<&rpmcc SDC2_MSMBUS_SNOC_PERIPH_A_CLK>;
+			clocks = <&rpmcc RPM_SMD_SNOC_PERIPH_CLK>,
+				<&rpmcc RPM_SMD_SNOC_PERIPH_A_CLK>;
 			qcom,bus-dev = <&fab_sys_noc>;
 			qcom,mas-rpm-id = <ICBID_MASTER_SDCC_2>;
 		};

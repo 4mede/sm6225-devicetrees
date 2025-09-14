@@ -53,37 +53,37 @@
 
 			/* Channel nodes */
 			ref_gnd {
-				reg = <ADC_REF_GND>;
+				reg = <ADC5_REF_GND>;
 				label = "ref_gnd";
 				qcom,pre-scaling = <1 1>;
 			};
 
 			vref_1p25 {
-				reg = <ADC_1P25VREF>;
+				reg = <ADC5_1P25VREF>;
 				label = "vref_1p25";
 				qcom,pre-scaling = <1 1>;
 			};
 
 			die_temp {
-				reg = <ADC_DIE_TEMP>;
+				reg = <ADC5_DIE_TEMP>;
 				label = "die_temp";
 				qcom,pre-scaling = <1 1>;
 			};
 
 			vph_pwr {
-				reg = <ADC_VPH_PWR>;
+				reg = <ADC5_VPH_PWR>;
 				label = "vph_pwr";
 				qcom,pre-scaling = <1 3>;
 			};
 
 			vcoin {
-				reg = <ADC_VCOIN>;
+				reg = <ADC5_VCOIN>;
 				label = "vcoin";
 				qcom,pre-scaling = <1 3>;
 			};
 
 			xo_therm {
-				reg = <ADC_XO_THERM_PU2>;
+				reg = <ADC5_XO_THERM_100K_PU>;
 				label = "xo_therm";
 				qcom,ratiometric;
 				qcom,hw-settle-time = <200>;
