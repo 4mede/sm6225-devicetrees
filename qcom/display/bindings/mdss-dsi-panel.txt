@@ -42,10 +42,9 @@ Required properties:
 - qcom,mdss-dsi-on-command:		A byte stream formed by multiple dcs packets base on
 					qcom dsi controller protocol.
 					byte 0: dcs data type
-					byte 1: set to indicate this is an individual packet
-						 (no chain)
+					byte 1: Unused
 					byte 2: virtual channel number
-					byte 3: expect ack from client (dcs read command)
+					byte 3: Message flags
 					byte 4: wait number of specified ms after dcs command
 						 transmitted
 					byte 5, 6: 16 bits length in network byte order
@@ -53,16 +52,16 @@ Required properties:
 - qcom,mdss-dsi-off-command:		A byte stream formed by multiple dcs packets base on
 					qcom dsi controller protocol.
 					byte 0: dcs data type
-					byte 1: set to indicate this is an individual packet
-						 (no chain)
+					byte 1: Unused
 					byte 2: virtual channel number
-					byte 3: expect ack from client (dcs read command)
+					byte 3: Message flags
 					byte 4: wait number of specified ms after dcs command
 						 transmitted
 					byte 5, 6: 16 bits length in network byte order
 					byte 7 and beyond: number byte of payload
 - qcom,mdss-dsi-post-panel-on-command:	same as "qcom,mdss-dsi-on-command" except commands are
 					sent after displaying an image.
+- qcom,platform-reset-gpio:		Specifies the reset gpio of primary display, not required for simulation panels.
 
 Note, if a short DCS packet(i.e packet with Byte 0:dcs data type as 05) mentioned in
 qcom,mdss-dsi-on-command/qcom,mdss-dsi-off-command stream fails to transmit,
@@ -71,14 +70,33 @@ then 3 options can be tried.
 				Byte 0: dcs data type = 05 (DCS short Packet)
 				Byte 0: dcs data type = 29 (DCS long Packet)
 	2. Send the packet in one burst by prepending with the next packet in packet stream
-				Byte 1 = 01 (indicates this is an individual packet)
-				Byte 1 = 00 (indicates this will be appended to the next
+				Byte 3 = 00 (indicates this is an individual packet)
+				Byte 3 = 40 (indicates this will be appended to the next
 					     individual packet in the packet stream)
 	3. Prepend a NULL packet to the short packet and send both in one burst instead of
 	   combining multiple short packets and sending them in one burst.
 
 Optional properties:
+- cell-index:                   Timing node index to help driver maintain the device tree ordering.
+- qcom,platform-sec-reset-gpio:		Specifies the reset gpio of secondary display.
+- qcom,platform-bklight-en-gpio:	Specifies the gpio for enabling backlight.
 - qcom,mdss-dsi-panel-name:		A string used as a descriptive name of the panel
+- qcom,vid-on-commands:			same as "qcom,mdss-dsi-on-command" except commands are
+						only sent for video mode.
+- qcom,vid-on-commands-state: String that specifies the ctrl state for sending panel on commands.
+					for video mode.
+					"dsi_lp_mode" = DSI low power mode (default)
+					"dsi_hs_mode" = DSI high speed mode
+- qcom,cmd-on-commands:			same as "qcom,mdss-dsi-on-command" except commands are
+					only sent for command mode.
+- qcom,cmd-on-commands-state: String that specifies the ctrl state for sending panel on commands.
+					for command mode.
+					"dsi_lp_mode" = DSI low power mode (default)
+					"dsi_hs_mode" = DSI high speed mode
+- qcom,mdss-dsi-physical-type:		A string used as a decriptive type of the panel.
+						"oled" : That indicate it's an OLED panel.
+						"lcd" : That indicate it's an LCD panel.
+						If it is not set, consider it is a LCD panel as default.
 - qcom,mdss-dsi-panel-phy-timings:	An array of length 'n' char that specifies the DSI PHY lane
 					timing settings for the panel. This is specific to SDE DRM driver.
 					The value of 'n' depends on the DSI PHY h/w revision and parsing this
@@ -86,6 +104,7 @@ Optional properties:
 - qcom,cmd-sync-wait-broadcast:		Boolean used to broadcast dcs command to panels.
 - qcom,mdss-dsi-fbc-enable:		Boolean used to enable frame buffer compression mode.
 - qcom,mdss-dsi-panel-mode-switch:	Boolean used to enable panel operating mode switch.
+- qcom,poms-align-panel-vsync:		Boolean used to align panel TE with timing engine vsync in POMS
 - qcom,mdss-dsi-fbc-slice-height:	Slice height(in lines) of compressed block.
 					Expressed as power of 2. To set as 128 lines,
 					this should be set to 7.
@@ -150,6 +169,10 @@ Optional properties:
 					followed by denominator. The jitter configurition causes
 					the early wakeup if panel needs to adjust before vsync.
 					Default jitter value is 2.0%. Max allowed value is 10%.
+- qcom,dsi-wd-jitter-enable:		Boolean used to enable watchdog jitter in simulator panels
+- qcom,dsi-wd-ltj-max-jitter:		A u32 pair with numerator and denominator specifying the
+					maximum jitter over a long time.
+- qcom,dsi-wd-ltj-time-sec:		A u32 value to specify the time over which the jitter increases.
 - qcom,mdss-dsi-panel-prefill-lines:	An integer value defines the panel prefill lines required to
 					calculate the backoff time of rsc.
 					Default value is 16 lines. Max allowed value is vtotal.
@@ -165,10 +188,51 @@ Optional properties:
 					"dfps_immediate_porch_mode_vfp" = FPS change request is
 					implemented immediately by changing panel vertical
 					front porch values.
+- qcom,dsi-supported-dfps-list:	List containing all the supported refresh rates.
+- qcom,dsi-supported-qsync-min-fps-list:	The fps value in this list indicates the qsync min fps
+					corresponding to the mode in the qcom,dsi-supported-dfps-list with same index.
+					qcom,dsi-supported-qsync-min-fps-list cannot be defined along with
+					qcom,mdss-dsi-qsync-min-refresh-rate. "qcom,qsync-enable" property should be
+					set along with this property.
+- qcom,qsync-mode-min-refresh-rate:	This u32 property is used to define qsync min fps per timing node instead
+					of using same qsync min fps for different timing modes. For defining qsync min
+					fps per timing node, this property should be defined in all timing nodes or else
+					to define single qsync fps for all modes,
+					"qcom,mdss-dsi-qsync-min-refresh-rate" property can be used.
+					"qcom,qsync-enable" property should be set along with this property.
+- qcom,dsi-qsync-avr-step-list:		The u32 fps values in this optional list indicate the avr step
+					requirement for qsync/AVR video mode panels. When a late frame is triggered,
+					AVR will delay the trigger to ensure the frame transfer snaps to the next step
+					interval. The step rate must be a common multiple of refresh and min-fps rates.
+					The values in this list should correspond to the dfps-list with same indeces
+					when DFPS is used, or a single value which applies to all rates.
+- qcom,mdss-dsi-transfer-time-us-min	Minimum supported mdp transfer time in us. This entry enables support to
+					dynamically set the transfer time for the given mode within the defined
+					range. Both min & max must be defined to enable.
+					qcom,mdss-dsi-transfer-time-us must be greater than this value.
+- qcom,mdss-dsi-transfer-time-us-max	Maximum supported mdp transfer time in us. This entry enables support to
+					dynamically set the transfer time for the given mode within the defined
+					range. Both min & max must be defined to enable. This time should not be
+					greater than vsync duration.
+					qcom,mdss-dsi-transfer-time-us must be less than this value.
 - qcom,min-refresh-rate:		Minimum refresh rate supported by the panel.
 - qcom,max-refresh-rate:		Maximum refresh rate supported by the panel. If max refresh
 					rate is not specified, then the frame rate of the panel in
 					qcom,mdss-dsi-panel-framerate is used.
+- qcom,dsi-dyn-clk-enable:		Boolean to indicate dsi dynamic clock switch feature
+					is supported.
+- qcom,dsi-dyn-clk-type:		A string that specifies the sub-type for the dynamic
+					clk feature. If dyn clk type is not specified, default
+					value "legacy" is used.
+					"legacy" = FPS is not maintained after dynamic clock switch.
+					"constant-fps-adjust-hfp" = FPS is maintained even after
+					dynamic clock switch by changing panel horizontal front
+					porch values.
+					"constant-fps-adjust-vfp" = FPS is maintained even after
+					dynamic clock switch by changing panel vertical front
+					porch values.
+					This dyn-clk-type entry is an optional binding which is
+					contingent on the enabling of dynamic clock switch.
 - qcom,mdss-dsi-bl-pmic-control-type:	A string that specifies the implementation of backlight
 					control for this panel.
 					"bl_ctrl_pwm" = Backlight controlled by PWM gpio.
@@ -194,6 +258,12 @@ Optional properties:
 					0 = default value.
 - qcom,mdss-dsi-bl-max-level:		Specifies the max backlight level supported by the panel.
 					255 = default value.
+- qcom,mdss-dsi-bl-inverted-dbv:	A boolean to specify whether to invert the display brightness value.
+					When this boolean is set, will inverted display brightness value.
+- qcom,bl-dsc-cmd-state: 		String that specifies the ctrl state for sending dcs brightness commands.
+					"dsi_hs_mode" = DSI high speed mode (default)
+					"dsi_lp_mode" = DSI low power mode
+					If the string was not set, dsi_hs_mode will be set as default mode.
 - qcom,mdss-brightness-max-level:	Specifies the max brightness level supported.
 					255 = default value.
 - qcom,bl-update-flag:			A string that specifies controls for backlight update of the panel.
@@ -209,7 +279,9 @@ Optional properties:
 - qcom,mdss-dsi-te-using-wd:		Boolean entry enables the watchdog timer support to generate the vsync signal
 					for command mode panel. By default, panel TE will be used to generate the vsync.
 - qcom,mdss-dsi-te-using-te-pin:	Boolean to specify whether using hardware vsync.
+- qcom,qsync-enable:			Boolean property to indicate if qsync is enabled/disabled.
 - qcom,mdss-dsi-qsync-min-refresh-rate: A u32 entry to specify minimum refresh rate supported by the panel to enable qsync feature.
+					"qcom,qsync-enable" property should be set along with this property.
 - qcom,mdss-dsi-qsync-on-commands:	String that specifies the commands to enable qsync feature.
 - qcom,mdss-dsi-qsync-on-commands-state: String that specifies the ctrl state for sending qsync on commands.
 					"dsi_lp_mode" = DSI low power mode (default)
@@ -310,6 +382,7 @@ Optional properties:
 					to the physical width in the framebuffer information.
 - qcom,mdss-pan-physical-height-dimension:	Specifies panel physical height in mm which corresponds
 					to the physical height in the framebuffer information.
+- qcom,mdss-dsi-panel-test-pin:	Specifies the panel test gpio.
 - qcom,mdss-dsi-mode-sel-gpio-state:	String that specifies the lcd mode for panel
 					(such as single-port/dual-port), if qcom,panel-mode-gpio
 					binding is defined in dsi controller.
@@ -404,6 +477,9 @@ Optional properties:
 - qcom,mdss-dsi-tx-eot-append:		Boolean used to enable appending end of transmission packets.
 - qcom,ulps-enabled:			Boolean to enable support for Ultra Low Power State (ULPS) mode.
 - qcom,suspend-ulps-enabled:		Boolean to enable support for ULPS mode for panels during suspend state.
+- qcom,spr-pack-type:		    String to specify the SPR pack type of panel pixel layout
+					Expected string for the pack types supported by MDSS are,
+					"pentile", "rgbw", "yygm", "yygw"
 - qcom,panel-roi-alignment:		Specifies the panel ROI alignment restrictions on its
 					left, top, width, height alignments and minimum width and
 					height values. This property is specified per timing node to support
@@ -413,8 +489,7 @@ Optional properties:
 					qcom dsi controller protocol, to read the panel status.
 					This value is used to kick in the ESD recovery.
 					byte 0: dcs data type
-					byte 1: set to indicate this is an individual packet
-						 (no chain)
+					byte 1: Unused
 					byte 2: virtual channel number
 					byte 3: expect ack from client (dcs read command)
 					byte 4: wait number of specified ms after dcs command
@@ -478,12 +553,34 @@ Optional properties:
 - qcom,mdss-dsi-post-mode-switch-on-command:		Multiple dcs packets used for turning on DSI panel
 					after panel has switch modes.
 					Refer to "qcom,mdss-dsi-on-command" section for adding commands.
-- qcom,video-to-cmd-mode-switch-commands:	List of commands that need to be sent
-					to panel in order to switch from video mode to command mode dynamically.
+- qcom,cmd-mode-switch-out-commands:		List of commands that need to be sent
+					to panel in order to switch out command mode dynamically.
 					Refer to "qcom,mdss-dsi-on-command" section for adding commands.
-- qcom,cmd-to-video-mode-switch-commands:	List of commands that need to be sent
-					to panel in order to switch from command mode to video mode dynamically.
+- qcom,cmd-mode-switch-out-commands-state: String that specifies the ctrl state for sending command mode switch out
+					commands.
+					"dsi_lp_mode" = DSI low power mode (default)
+					"dsi_hs_mode" = DSI high speed mode
+- qcom,cmd-mode-switch-in-commands:		List of commands that need to be sent
+					to panel in order to switch in command mode dynamically.
 					Refer to "qcom,mdss-dsi-on-command" section for adding commands.
+- qcom,cmd-mode-switch-in-commands-state: String that specifies the ctrl state for sending command mode switch in
+					commands.
+					"dsi_lp_mode" = DSI low power mode (default)
+					"dsi_hs_mode" = DSI high speed mode
+- qcom,video-mode-switch-out-commands:		List of commands that need to be sent
+					to panel in order to switch out video mode dynamically.
+					Refer to "qcom,mdss-dsi-on-command" section for adding commands.
+- qcom,video-mode-switch-out-commands-state: String that specifies the ctrl state for sending video mode switch out
+					commands.
+					"dsi_lp_mode" = DSI low power mode (default)
+					"dsi_hs_mode" = DSI high speed mode
+- qcom,video-mode-switch-in-commands:		List of commands that need to be sent
+					to panel in order to switch in video mode dynamically.
+					Refer to "qcom,mdss-dsi-on-command" section for adding commands.
+- qcom,video-mode-switch-in-commands-state: String that specifies the ctrl state for sending video mode switch in
+					commands.
+					"dsi_lp_mode" = DSI low power mode (default)
+					"dsi_hs_mode" = DSI high speed mode
 - qcom,send-pps-before-switch:		Boolean propety to indicate when PPS commands should be sent,
 					either before or after switch commands during dynamic resolution
 					switch in DSC panels. If the property is not present, the default
@@ -495,11 +592,12 @@ Optional properties:
 - qcom,panel-ack-disabled: A boolean property to indicate, whether we need to wait for any ACK from the panel
 			   for any commands that we send.
 - qcom,mdss-dsi-force-clock-lane-hs:	Boolean to force dsi clock lanes to HS mode always.
-
+- qcom,panel-cphy-mode:			Boolean to specify whether panel is using cphy.
 - qcom,compression-mode:		Select compression mode for panel.
 					"fbc" - frame buffer compression
 					"dsc" - display stream compression.
-					If "dsc" compression is used then config subnodes needs to be defined.
+					"vdc" - VESA display compression.
+					If "dsc" or "vdc" compression is used then config subnodes needs to be defined.
 - qcom,panel-supply-entries:		A node that lists the elements of the supply used to
 					power the DSI panel. There can be more than one instance
 					of this binding, in which case the entry would be appended
@@ -528,6 +626,28 @@ Optional properties:
 - qcom,mdss-dsc-block-prediction-enable: A boolean value to enable/disable the block prediction at decoder.
 - qcom,mdss-dsc-config-by-manufacture-cmd: A boolean to indicates panel use manufacture command to setup pps
 					instead of standard dcs type 0x0A.
+- qcom,vdc-version:		An 8 bit value indicates the VDC version supported by panel. Bits[0.3]
+					provides information about minor version while Bits[4.7] provides
+					major version information. It supports only VDC rev 1(Major).2(Minor)
+					right now.
+- qcom,vdc-version-release:		An 8 bit value indicated VDC version release. This has to be set to 0.
+- qcom,vdc-slice-height:	An u32 value which indicates slice height. This should be atleast 16 lines.
+- qcom,vdc-slice-width:		An u32 value which indicates slice width. This should be atleast 64 pixels and
+					should also be a multiple of 8
+- qcom,vdc-slice-per-pkt:	An u32 value indicates the slice per dsi packet.
+- qcom,vdc-bit-per-component:	An u32 value indicates the bits per component before compression.
+- qcom,vdc-bit-per-pixel:	An u32 value indicates the bits per pixel after compression.
+- qcom,src-color-space:		An u32 value indicating the source color space. It can either be RGB or YUV.
+					Default value is assumed to be RGB
+					0 - RGB
+					1 - YUV
+- qcom,src-chroma-format:	An u32 value indicating the source color space. It can either be 444, 420 or 422.
+					Default value is assumed to be 444
+					0 - 444
+					1 - 422
+					2 - 420
+- qcom,mdss-pps-delay-ms:		An u32 value that indicates post PPS command
+								delay in milliseconds. If no value is specified, it chooses zero by default.
 - qcom,display-topology:  		Array of u32 values which specifies the	list of topologies available
 					for the display. A display topology is defined by a
 					set of 3 values in the order:
@@ -542,7 +662,17 @@ Optional properties:
 					value 0.
 - qcom,mdss-dsi-ext-bridge-mode:	External bridge chip is connected instead of panel.
 - qcom,mdss-dsi-dma-schedule-line:	An integer value indicates the line number after vertical active
-					region, at which command DMA needs to be triggered.
+					region for video mode panels and line number after TE for command mode
+					panels, at which command DMA needs to be triggered.
+- qcom,mdss-dsi-dma-schedule-window:	An integer value indicates the width of the DMA window during which a
+					DCS command will be triggered for command mode panels
+- qcom,mdss-dsi-mdp-idle-ctrl-en:	A boolean to enable LP11 insertion after transmission of every line.
+					This requires command mdp burst mode to be disabled.
+- qcom,mdss-dsi-mdp-idle-ctrl-len:	An u32 value indicating the number of dsi pclk cycles of idle time
+					to insert between command mode mdp packets. This time must be long
+					enough to cover the time link takes to switch between HS to LP11 mode.
+- qcom,vert-padding-value:	An u32 value indicating the second display height while using two displays
+					in shared display feature.
 
 Required properties for sub-nodes:	None
 Optional properties:
@@ -570,6 +700,11 @@ Additional properties added to the second level nodes that represent timings pro
 					commands.
 					"dsi_lp_mode" = DSI low power mode (default)
 					"dsi_hs_mode" = DSI high speed mode
+- qcom,dsi-dyn-clk-list:                An u32 array of all the supported dsi bit clock
+                                        frequencies in Hz for the given mode, listed in
+                                        order of preference.
+- qcom,disable-rsc-solver:              Timing node property to dynamically disable RSC solver for
+                                        high FPS usecase due to lower bitclk rate.
 
 Note, if a given optional qcom,* binding is not present, then the driver will configure
 the default values specified.
@@ -587,6 +722,7 @@ Example:
 		qcom,cmd-sync-wait-broadcast;
 		qcom,mdss-dsi-fbc-enable;
 		qcom,mdss-dsi-panel-mode-switch;
+		qcom,poms-align-panel-vsync;
 		qcom,mdss-dsi-fbc-slice-height = <5>;
 		qcom,mdss-dsi-fbc-2d-pred-mode;
 		qcom,mdss-dsi-fbc-ver2-mode;
@@ -622,11 +758,13 @@ Example:
 		qcom,mdss-dsi-bl-max-level = < 15>;
 		qcom,mdss-brightness-max-level = <255>;
 		qcom,bl-update-flag = "delay_until_first_frame";
+		qcom,spr-pack-type = "pentile";
 		qcom,mdss-dsi-interleave-mode = <0>;
 		qcom,mdss-dsi-panel-type = "dsi_video_mode";
 		qcom,mdss-dsi-te-check-enable;
 		qcom,mdss-dsi-te-using-wd;
 		qcom,mdss-dsi-te-using-te-pin;
+		qcom,qsync-enable;
 		qcom,mdss-dsi-qsync-min-refresh-rate = <30>;
 		qcom,mdss-dsi-te-dcs-command = <1>;
 		qcom,mdss-dsi-wr-mem-continue = <0x3c>;
@@ -667,6 +805,9 @@ Example:
 		qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_wled";
 		qcom,mdss-dsi-pan-enable-dynamic-fps;
 		qcom,mdss-dsi-pan-fps-update = "dfps_suspend_resume_mode";
+		qcom,dsi-supported-dfps-list = <30 45 60>;
+		qcom,dsi-supported-qsync-min-fps-list = <30 40 55>;
+		qcom,dsi-qsync-avr-step-list = <0 360 660>;
 		qcom,min-refresh-rate = <30>;
 		qcom,max-refresh-rate = <60>;
 		qcom,mdss-dsi-bl-pmic-bank-select = <0>;
@@ -716,9 +857,16 @@ Example:
 		qcom,mdss-dsi-force-clock-lane-hs;
 		qcom,compression-mode = "dsc";
 		qcom,adjust-timer-wakeup-ms = <1>;
+		qcom,platform-reset-gpio = <&tlmm 0 0>;
+
+		qcom,dsi-dyn-clk-enable;
+		qcom,dsi-dyn-clk-type = "constant-fps-adjust-hfp";
+
 		qcom,mdss-dsi-display-timings {
 			wqhd {
+				cell-index = <0>;
 				qcom,mdss-dsi-cmd-mode;
+				qcom,mdss-dsi-video-mode;
 				qcom,mdss-dsi-timing-default;
 				qcom,mdss-dsi-panel-width = <720>;
 				qcom,mdss-dsi-panel-height = <2560>;
@@ -732,6 +880,12 @@ Example:
 				qcom,mdss-dsi-panel-framerate = <60>;
 				qcom,mdss-dsi-panel-clockrate = <424000000>;
 				qcom,mdss-mdp-transfer-time-us = <12500>;
+				qcom,dsi-wd-jitter-enable;
+				qcom,mdss-dsi-panel-jitter = <0x2 0x1>;
+				qcom,dsi-wd-ltj-max-jitter = <0x4 0x1>;
+				qcom,dsi-wd-ltj-time-sec = <3600>;
+				qcom,mdss-mdp-transfer-time-us-min = <10000>;
+				qcom,mdss-mdp-transfer-time-us-max = <15000>;
 				qcom,mdss-dsi-panel-timings = [E6 38 26 00 68 6E 2A 3C 2C 03 04 00];
 				qcom,mdss-dsi-t-clk-post = <0x02>;
 				qcom,mdss-dsi-t-clk-pre = <0x2a>;
@@ -742,11 +896,27 @@ Example:
 					29 00 00 00 00 00 02 B0 04
 					29 00 00 00 00 00 02 F1 00];
 				qcom,mdss-dsi-timing-switch-command-state = "dsi_lp_mode";
+				qcom,qsync-mode-min-refresh-rate = <48>;
 				qcom,mdss-dsi-qsync-on-commands = [15 01 00 00 00 00 02 51 00];
 				qcom,mdss-dsi-qsync-on-commands-state = "dsi_hs_mode";
 				qcom,mdss-dsi-qsync-off-commands = [15 01 00 00 00 00 02 51 00];
 				qcom,mdss-dsi-qsync-off-commands-state = "dsi_hs_mode";
+				qcom,video-mode-switch-out-commands = [
+					39 01 00 00 00 00 06 b2 00 5d 04 80 49];
+				qcom,video-mode-switch-out-commands-state = "dsi_lp_mode";
+				qcom,video-mode-switch-in-commands = [
+					 39 01 00 00 00 00 06 b2 00 5d 04 80 40];
+				qcom,video-mode-switch-in-commands-state = "dsi_lp_mode";
+				qcom,cmd-mode-switch-in-commands = [
+					39 01 00 00 00 00 06 b2 00 5d 04 80 42];
+				qcom,cmd-mode-switch-in-commands-state = "dsi_lp_mode";
+				qcom,cmd-mode-switch-out-commands = [
+					39 01 00 00 00 00 06 b2 00 5d 01 02 50];
+				qcom,cmd-mode-switch-out-commands-state = "dsi_lp_mode";
 
+				qcom,dsi-dyn-clk-list = <524637388 525735938 528842882>;
+
+				qcom,vert-padding-value = <2940>;
 				qcom,mdss-dsc-slice-height = <16>;
 				qcom,mdss-dsc-slice-width = <360>;
 				qcom,mdss-dsc-slice-per-pkt = <2>;
@@ -805,6 +975,16 @@ Example:
 		qcom,display-topology = <1 1 1>,
 			                <2 2 1>;
 		qcom,default-topology-index = <0>;
+		qcom,vdc-version = <0x12>;
+		qcom,vdc-version-release = <0>;
+		qcom,vdc-slice-height = <256>;
+		qcom,vdc-slice-width = <720>;
+		qcom,vdc-slice-per-pkt = <2>;
+		qcom,vdc-bit-per-component = <8>;
+		qcom,vdc-bit-per-pixel = <6>;
+		qcom,src-color-space = <0>;
+		qcom,src-chroma-format = <0>;
 		qcom,mdss-dsi-dma-schedule-line = <5>;
+		qcom,mdss-dsi-dma-schedule-window = <50>;
 	};
 };
