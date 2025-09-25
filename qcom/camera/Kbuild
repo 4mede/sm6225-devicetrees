@@ -2,15 +2,6 @@ DTC_INCLUDE += $(srctree)/../sm6225-modules/qcom/opensource/camera-kernel
 KBUILD_DTC_INCLUDE += $(srctree)/../sm6225-modules/qcom/opensource/camera-kernel
 
 include $(srctree)/$(src)/config/bengal.mk
-# Since Kernel SI can support multiple ARCH's this allows only the current selected target ARCH
-# to compile.
-ifeq ($(CAMERA_TARGET_EXISTS), y)
-include $(CAMERA_TARGET_MKFILE_PATH)
-else
-# Print a warning but do not throw an error to allow bring-up of new targets!
-$(warning [$(MODNAME)] $(MSM_ARCH) is not a valid target, make sure config\ folder contains a makefile named $(MSM_ARCH).mk)
-$(warning [$(MODNAME)] driver is NOT being enabled!)
-endif
 
 always-y	:= $(dtbo-y) $(dtb-y)
 subdir-y	:= $(dts-dirs)
