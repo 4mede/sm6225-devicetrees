@@ -115,17 +115,15 @@ kalama-overlays-dtb-$(CONFIG_ARCH_CROW) += $(CROW_BOARDS) $(CROW_BASE_DTB)
 dtb-y += $(kalama-dtb-y)
 
 ifeq ($(CONFIG_HAWAO_DTB),y)
-KHAJE_BASE_DTB += khaje-hawao-evt-overlay.dtbo
-KHAJE_BOARDS += khaje-hawao-evt-overlay.dtbo-base
+KHAJE_BASE_DTB += khaje-moto-base.dtb
+KHAJE_BOARDS += khaje-hawao-evt-overlay.dtbo
 endif
 
 ifeq ($(CONFIG_DEVON_DTB),y)
-KHAJE_BASE_DTB += khaje-devon-evt-overlay.dtbo \
-        khaje-devon-dvt2-overlay.dtbo \
-        khaje-devon-pvt-overlay.dtbo
-KHAJE_BOARDS += khaje-devon-evt-overlay.dtbo-base \
-		khaje-devon-dvt2-overlay.dtbo-base \
-		khaje-devon-pvt-overlay.dtbo-base
+KHAJE_BASE_DTB += khaje-moto-base.dtb
+KHAJE_BOARDS += khaje-devon-evt-overlay.dtbo \
+		khaje-devon-dvt2-overlay.dtbo \
+		khaje-devon-pvt-overlay.dtbo
 endif
 
 ifeq ($(CONFIG_RHODE_DTB),y)
@@ -145,7 +143,7 @@ bengal-overlays-dtb-$(CONFIG_ARCH_KHAJE) += $(KHAJE_BOARDS) $(KHAJE_BASE_DTB)
 dtb-y += $(bengal-dtb-y)
 
 ifeq ($(CONFIG_BORNEO_DTB),y)
-BENGAL_BASE_DTB += bengal-moto-base.dtb
+BENGAL_BASE_DTB += bengal-moto-base-borneo.dtb
 BENGAL_BOARDS += bengal-borneo-evb-overlay.dtbo \
 		bengal-borneo-evt-overlay.dtbo \
 		bengal-borneo-dvt1-overlay.dtbo \
@@ -153,41 +151,32 @@ BENGAL_BOARDS += bengal-borneo-evb-overlay.dtbo \
 endif
 
 ifeq ($(CONFIG_CEBU_DTB),y)
-BENGAL_BASE_DTB += bengal-cebu-evt-overlay.dtbo
-BENGAL_BOARDS += bengal-cebu-evt-overlay.dtbo-base
+BENGAL_BASE_DTB += bengal-moto-base-cebu.dtb
+BENGAL_BOARDS += bengal-cebu-evt-overlay.dtbo
 endif
 
 ifeq ($(CONFIG_GUAMP_DTB),y)
-BENGAL_BASE_DTB += bengal-guamp-evt-overlay.dtbo \
-        bengal-guamp-dvt-overlay.dtbo \
-        bengal-guamp-dvt2-sku3-overlay.dtbo \
-        bengal-guamp-dvt2-sku4-overlay.dtbo \
-        bengal-guamp-pvt-overlay.dtbo
-BENGAL_BOARDS += bengal-guamp-evt-overlay.dtbo-base \
-		 bengal-guamp-dvt-overlay.dtbo-base \
-		 bengal-guamp-dvt2-sku3-overlay.dtbo-base \
-		 bengal-guamp-dvt2-sku4-overlay.dtbo-base \
-		 bengal-guamp-pvt-overlay.dtbo-base
+BENGAL_BASE_DTB += bengal-moto-base.dtb
+BENGAL_BOARDS += bengal-guamp-evt-overlay.dtbo \
+		 bengal-guamp-dvt-overlay.dtbo \
+		 bengal-guamp-dvt2-sku3-overlay.dtbo \
+		 bengal-guamp-dvt2-sku4-overlay.dtbo \
+		 bengal-guamp-pvt-overlay.dtbo
 endif
 
 ifeq ($(CONFIG_CAPRIP_DTB),y)
-BENGAL_BASE_DTB += bengal-caprip-evt-overlay.dtbo \
-		   bengal-caprip-dvt2-overlay.dtbo
-BENGAL_BOARDS += bengal-caprip-evt-overlay.dtbo-base \
-		 bengal-caprip-dvt2-overlay.dtbo-base
+BENGAL_BASE_DTB += bengal-moto-base.dtb
+BENGAL_BOARDS += bengal-caprip-evt-overlay.dtbo \
+		 bengal-caprip-dvt2-overlay.dtbo
 endif
 
 ifeq ($(CONFIG_BATHENA_DTB),y)
-BENGAL_BASE_DTB += bengal-bathena-evt-overlay.dtbo \
-        bengal-bathena-evt1-overlay.dtbo \
-        bengal-bathena-dvt2-overlay.dtbo \
-        bengal-bathena-pvt1-overlay.dtbo \
-        bengal-bathena-evt1-sku3-overlay.dtbo
-BENGAL_BOARDS += bengal-bathena-evt-overlay.dtbo-base \
-		 bengal-bathena-evt1-overlay.dtbo-base \
-		 bengal-bathena-dvt2-overlay.dtbo-base \
-		 bengal-bathena-pvt1-overlay.dtbo-base \
-		 bengal-bathena-evt1-sku3-overlay.dtbo-base
+BENGAL_BASE_DTB += bengal-moto-base.dtb
+BENGAL_BOARDS += bengal-bathena-evt-overlay.dtbo \
+		 bengal-bathena-evt1-overlay.dtbo \
+		 bengal-bathena-dvt2-overlay.dtbo \
+		 bengal-bathena-pvt1-overlay.dtbo \
+		 bengal-bathena-evt1-sku3-overlay.dtbo
 endif
 
 bengal-dtb-$(CONFIG_ARCH_BENGAL) += \
@@ -196,35 +185,27 @@ bengal-overlays-dtb-$(CONFIG_ARCH_BENGAL) += $(BENGAL_BOARDS) $(BENGAL_BASE_DTB)
 dtb-y += $(bengal-dtb-y)
 
 ifeq ($(CONFIG_GUAM_DTB),y)
-SCUBA_BASE_DTB += bengal-guam-evt-overlay.dtbo \
-        bengal-guam-dvt-overlay.dtbo \
-        bengal-guam-dvt2-overlay.dtbo
-SCUBA_BOARDS += bengal-guam-evt-overlay.dtbo-base \
-		bengal-guam-dvt-overlay.dtbo-base \
-		bengal-guam-dvt2-overlay.dtbo-base
+SCUBA_BASE_DTB += bengal-moto-base.dtb
+SCUBA_BOARDS += bengal-guam-evt-overlay.dtbo \
+		bengal-guam-dvt-overlay.dtbo \
+		bengal-guam-dvt2-overlay.dtbo
 endif
 
 ifeq ($(CONFIG_GUAMNA_DTB),y)
-SCUBA_BASE_DTB += bengal-guamna-gwlc-evt-overlay.dtbo \
-        bengal-guamna-evt-overlay.dtbo \
-	bengal-guamna-gwlc-dvt2-overlay.dtbo \
-	bengal-guamna-dvt2-overlay.dtbo
-SCUBA_BOARDS += bengal-guamna-evt-overlay.dtbo-base \
-		bengal-guamna-gwlc-evt-overlay.dtbo-base \
-		bengal-guamna-dvt2-overlay.dtbo-base \
-		bengal-guamna-gwlc-dvt2-overlay.dtbo-base \
-		bengal-moto-low-ram-base-guamna.dtb
+SCUBA_BASE_DTB += bengal-moto-low-ram-base-guamna.dtb
+        bengal-moto-base-guamna.dtb
+SCUBA_BOARDS += bengal-guamna-evt-overlay.dtbo \
+		bengal-guamna-gwlc-evt-overlay.dtbo \
+		bengal-guamna-dvt2-overlay.dtbo \
+		bengal-guamna-gwlc-dvt2-overlay.dtbo
 endif
 
 ifeq ($(CONFIG_CAPRI_DTB),y)
-SCUBA_BASE_DTB += bengal-capri-evt-overlay.dtbo \
-        bengal-capri-evt-sku5-overlay.dtbo \
-        bengal-capri-dvt2-overlay.dtbo \
-	bengal-capri-dvt2-sku5-overlay.dtbo
-SCUBA_BOARDS += bengal-capri-evt-overlay.dtbo-base \
-		bengal-capri-evt-sku5-overlay.dtbo-base \
-		bengal-capri-dvt2-overlay.dtbo-base \
-		bengal-capri-dvt2-sku5-overlay.dtbo-base
+SCUBA_BASE_DTB += bengal-moto-base.dtb
+SCUBA_BOARDS += bengal-capri-evt-overlay.dtbo \
+		bengal-capri-evt-sku5-overlay.dtbo \
+		bengal-capri-dvt2-overlay.dtbo \
+		bengal-capri-dvt2-sku5-overlay.dtbo
 endif
 
 bengal-dtb-$(CONFIG_ARCH_SCUBA) += \
